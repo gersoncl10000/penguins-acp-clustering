@@ -1,196 +1,141 @@
-\# Análisis de Componentes Principales (ACP) y Clustering en Pingüinos de Palmer
+# Análisis de Componentes Principales (ACP) y Clustering en Pingüinos de Palmer
 
+Este proyecto corresponde a una tarea del Máster en Minería de Datos y Visualización. Se aplica un enfoque estadístico multivariante que combina **Análisis de Componentes Principales (ACP)** y **Clustering no supervisado** para explorar la estructura morfológica de pingüinos sin usar etiquetas de especie en el agrupamiento.
 
+---
 
-Este proyecto corresponde a una tarea académica del Máster en Minería de Datos y Visualización. Se ha aplicado un enfoque estadístico multivariante para explorar la estructura morfológica de pingüinos de la Antártida mediante \*\*Análisis de Componentes Principales (ACP)\*\* y \*\*clustering no supervisado\*\*, con el fin de descubrir patrones naturales en los datos sin utilizar etiquetas de especie durante el agrupamiento.
+## 🎯 Objetivo del proyecto
+
+- Representar la variabilidad morfológica de forma reducida y visual.
+- Identificar patrones naturales en los datos mediante clustering.
+- Comparar las agrupaciones con las especies reales (Adelie, Chinstrap, Gentoo).
+- Interpretar el perfil morfológico medio de cada grupo.
+
+---
+
+## 📊 Análisis exploratorio
+
+Se realizó una primera inspección visual y numérica para evaluar:
+
+- Distribución conjunta de las variables morfológicas por especie.
+- Correlaciones lineales entre variables.
+
+**Figuras:**
+
+- 📌 `Pairplot` de las variables coloreado por especie:
+
+  ![fig_00_pairplot](fig/fig_00_pairplot.png)
+
+- 📌 Mapa de calor de correlaciones:
+
+  ![fig_01_heatmap_corr](fig/fig_01_heatmap_corr.png)
+
+---
+
+## 🧪 Metodología
+
+### 1. Preparación de datos
+- Se eliminaron valores nulos.
+- Variables estandarizadas: `bill_length_mm`, `bill_depth_mm`, `flipper_length_mm`, `body_mass_g`.
+
+### 2. ACP
+- Se retuvieron 2 componentes principales explicando el **88.1 % de la varianza**.
+- Se visualizaron:
+  - Scree plot
+  - Círculo de correlaciones
+  - Dispersión de individuos (PC1 vs PC2)
+
+📌 Ejemplo:
+
+![Círculo de correlaciones](fig/fig_04_circulo_correlaciones.png)
+
+---
+
+### 3. Clustering jerárquico (Ward)
+- Distancias euclídeas sobre componentes principales.
+- Corte visual en el dendrograma sugiere **k = 3**.
+
+📌 Ejemplo:
+
+![Dendrograma](fig/fig_06_dendrograma_ward.png)
+
+---
+
+### 4. Clustering particional (K-means)
+- Evaluación con gráfico del codo y silueta media.
+- Se seleccionó **k = 5** como solución final.
+
+📌 Ejemplos:
+
+![Codo](fig/fig_07_kmeans_codo.png)  
+![Silueta](fig/fig_08_silueta.png)
+
+---
+
+### 5. Perfilado morfológico
+Se calcularon medias y desviaciones por grupo K-means, y se representaron en un gráfico radar.
+
+📌 Ejemplo:
+
+![Radar](fig/fig_09_radar_clusters.png)
+
+---
+
+## 🧠 Principales hallazgos
+
+- El clustering jerárquico reproduce la clasificación por especie con k = 3.
+- K-means con k = 5 revela subgrupos más detallados:
+  - Gentoo se divide en dos clústeres distintos por tamaño.
+  - Chinstrap forma un grupo denso y homogéneo.
+  - Adelie se divide, y uno de los grupos (grupo 4) se superpone con Chinstrap.
+
+**Grupo 4** destaca por su morfología intermedia, lo que podría indicar:
+
+- Un proceso de hibridación natural.
+- Una diferenciación morfológica incipiente.
+
+---
+
+## ⚠️ Limitaciones
+
+- La elección de `k` en K-means implica interpretación subjetiva.
+- PCA es lineal: no capta relaciones no lineales.
+- No se usó validación genética ni geográfica externa.
+- Tamaño muestral relativamente pequeño.
+
+---
+
+## 📁 Estructura del repositorio
+
+Proyecto_Penguins_Clustering/
+├── Proyecto_Penguins_Clustering.ipynb # Notebook principal con todas las fases A–H
+├── TAREA GERSON CASTILLO MINERIA DE DATOS - CLUSTERING.pdf # Informe académico
+├── FuncionesMineria2.py # Funciones oficiales
+├── /fig
+│ ├── fig_00_pairplot.png
+│ ├── fig_01_heatmap_corr.png
+│ ├── fig_04_circulo_correlaciones.png
+│ ├── fig_06_dendrograma_ward.png
+│ ├── fig_07_kmeans_codo.png
+│ ├── fig_08_silueta.png
+│ └── fig_09_radar_clusters.png
+└── README.md
 
 
 
 ---
 
+## 📄 Informe final
 
+Consulta el documento con la explicación detallada, redacción académica y todas las fases del análisis:
 
-\## 🎯 Objetivo del proyecto
-
-
-
-El objetivo es identificar grupos de individuos con morfología similar a partir de variables cuantitativas. Las especies no se utilizan como variable predictora, lo que permite:
-
-
-
-\- Sintetizar la información mediante ACP.
-
-\- Visualizar la variabilidad estructural en un espacio de baja dimensión.
-
-\- Determinar el número óptimo de grupos (k).
-
-\- Interpretar y perfilar morfológicamente los clústeres.
-
-\- Comparar resultados con la clasificación taxonómica original.
-
-
+📎 [`TAREA GERSON CASTILLO MINERIA DE DATOS - CLUSTERING.pdf`](./TAREA%20GERSON%20CASTILLO%20MINERIA%20DE%20DATOS%20-%20CLUSTERING.pdf)
 
 ---
 
-
-
-\## 📚 Metodología aplicada
-
-
-
-\### 1. Preparación y estandarización de datos
-
-\- Variables utilizadas: `bill\_length\_mm`, `bill\_depth\_mm`, `flipper\_length\_mm`, `body\_mass\_g`.
-
-\- Se eliminaron observaciones con valores nulos.
-
-\- Las variables fueron transformadas con `StandardScaler`.
-
-
-
-\### 2. Análisis de Componentes Principales (ACP)
-
-\- Se retuvieron 2 componentes principales que explican el \*\*88.1 % de la varianza total\*\*.
-
-\- Se utilizaron gráficos como:
-
-&nbsp; - Scree Plot (`plot\_varianza\_explicada`)
-
-&nbsp; - Círculo de correlaciones (`plot\_corr\_cos`)
-
-&nbsp; - Proyección de individuos (`plot\_pca\_scatter\_with\_vectors`)
-
-
-
-📌 \*\*Ejemplo:\*\*
-
-
-
-!\[Círculo de correlaciones](fig/fig\_04\_circulo\_correlaciones.png)
-
-
-
----
-
-
-
-\### 3. Clustering jerárquico (Ward)
-
-\- Se utilizó la matriz de distancias euclídeas sobre las componentes principales.
-
-\- Método de Ward aplicado con `scipy.cluster.hierarchy`.
-
-\- El dendrograma sugirió \*\*k = 3\*\* como número natural de grupos.
-
-
-
-📌 \*\*Ejemplo:\*\*
-
-
-
-!\[Dendrograma Ward](fig/fig\_06\_dendrograma\_ward.png)
-
-
-
----
-
-
-
-\### 4. Clustering particional (K-means)
-
-\- Se evaluaron valores de `k` entre 2 y 10.
-
-\- Se utilizaron:
-
-&nbsp; - \*\*Gráfico del codo\*\* (inercia intra-cluster)
-
-&nbsp; - \*\*Coeficiente de silueta media\*\*
-
-\- Se seleccionó \*\*k = 5\*\* como valor óptimo.
-
-
-
-📌 \*\*Ejemplos:\*\*
-
-
-
-!\[Codo](fig/fig\_07\_kmeans\_codo.png)  
-
-!\[Silueta](fig/fig\_08\_silueta.png)
-
-
-
----
-
-
-
-\### 5. Perfilado morfológico de los grupos
-
-
-
-Cada grupo fue descrito mediante la media y desviación estándar de sus variables estandarizadas.
-
-
-
-📌 \*\*Gráfico radar por grupo:\*\*
-
-
-
-!\[Radar](fig/fig\_09\_radar\_clusters.png)
-
-
-
----
-
-
-
-\## 🧠 Hallazgos principales
-
-
-
-\- El agrupamiento jerárquico refleja bien la separación entre especies, proponiendo \*\*k = 3\*\*.
-
-\- El clustering K-means con \*\*k = 5\*\* permitió descubrir:
-
-&nbsp; - Dos subgrupos dentro de \*\*Gentoo\*\* (grupos 1 y 3).
-
-&nbsp; - Un grupo morfológicamente consistente de \*\*Chinstrap\*\* (grupo 2).
-
-&nbsp; - Dos agrupaciones asociadas a \*\*Adelie\*\*, una de las cuales (grupo 4) incluye también individuos \*\*Chinstrap\*\*.
-
-
-
-🔍 \*\*Grupo 4\*\* presenta una combinación intermedia de características, lo que podría indicar:
-
-\- Un caso de \*\*hibridación natural\*\*.
-
-\- Una \*\*diferenciación incipiente\*\* que justifica futuras investigaciones.
-
-
-
----
-
-
-
-\## ⚠️ Limitaciones
-
-
-
-\- La elección del número de clústeres implica interpretación visual.
-
-\- K-means presupone forma esférica de los clústeres.
-
-\- El ACP es una técnica lineal: no capta relaciones no lineales.
-
-\- No se dispone de validación genética o geográfica externa.
-
-\- El tamaño muestral reducido limita la generalización.
-
-
-
----
-
-
-
-\## 📁 Estructura del repositorio
+## 👤 Autor
+
+**Gerson Castillo**  
+Máster en Minería de Datos y Visualización  
+[Nombre de la Universidad]
 
